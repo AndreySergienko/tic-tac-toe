@@ -10,6 +10,19 @@ class Board {
     createCleanBoard();
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'size': size,
+      'cells': cells.map((List<Cell> row) => row.map((Cell cell) => cell.toString()).toList()).toList()
+    };
+  }
+
+  factory Board.fromJson(Map<String, dynamic> json) {
+    var board = Board(json['size']);
+    board.cells = (json['cells'] as List).map((row) => (row as List).map((cell) => Cell.values.firstWhere((e) => e.toString() == cell)).toList()).cast<List<Cell>>().toList();
+    return board;
+  }
+
   void printBoard() {
     stdout.write(' ');
     for (int i = 0; i < size; i++) {

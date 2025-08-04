@@ -15,5 +15,15 @@ class Player {
     cellType = Cell.values[idActivePlayer];
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'cellType': cellType.toString()
+    };
+  }
+
+  factory Player.fromJson(Map<String, dynamic> json) {
+    return Player(Cell.values.firstWhere((e) => e.toString() == json['cellType']));
+  }
+
   String get symbol => cellSymbols[cellType]!;
 }

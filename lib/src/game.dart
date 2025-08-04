@@ -3,14 +3,39 @@ import 'dart:io';
 import 'package:tic_tac_app/src/board.dart';
 import 'package:tic_tac_app/src/cell_type.dart';
 import 'package:tic_tac_app/src/game_state.dart';
+import 'package:tic_tac_app/src/i_game_saver.dart';
 import 'package:tic_tac_app/src/player.dart';
 
 class Game {
   final Board board;
   final Player currentPlayer;
-  GameState state = GameState.playing;
+  GameState state;
+  GameSaver saver;
 
-  Game(this.board, this.currentPlayer);
+  Game(this.board, this.currentPlayer, this.saver, {
+    this.state = GameState.playing
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'board': board.toJson(),
+      'player': currentPlayer.toJson(),
+      'gameState': state.name
+    };
+  }
+
+  bool saveCheck(String input) {
+    if (input == 'save') {
+      print('Input file name: ');
+      String? fileName = stdin.readLineSync();
+      if (fileName != null) {
+        saver.saveGame(this, fileName);
+      }
+      return true;
+    }
+
+    return false;
+  }
 
   void updateState() {
     if (board.checkWin(Cell.cross)) {
